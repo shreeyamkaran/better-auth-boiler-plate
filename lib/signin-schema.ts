@@ -7,6 +7,4 @@ export function getSignInSchema() {
   });
 }
 
-const signInSchema = getSignInSchema();
-
-export type TSignInSchema = z.infer<typeof signInSchema>;
+export type TSignInSchema = z.infer<ReturnType<typeof getSignInSchema>>;

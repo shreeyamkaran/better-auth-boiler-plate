@@ -25,7 +25,6 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { toast } from 'sonner';
-import { authClient } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
 import { signoutAction } from '@/actions/signout.action';
 
