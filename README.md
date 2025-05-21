@@ -1,3 +1,5 @@
+## Add the following in a .env file present in the root
+
 NEXT_PUBLIC_API_URL="http://localhost:3000"
 BETTER_AUTH_SECRET="WLXykwKqLIIOnJSJlUn1jbc68yUX2h2P"
 BETTER_AUTH_URL="http://localhost:3000"
