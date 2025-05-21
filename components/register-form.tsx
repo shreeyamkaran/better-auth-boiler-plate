@@ -17,7 +17,6 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { getSignUpSchema, TSignUpSchema } from '@/lib/signup-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { authClient } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { signupEmailAction } from '@/actions/signup-email.action';
