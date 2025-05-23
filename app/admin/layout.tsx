@@ -1,21 +1,20 @@
+import { AppSidebar } from '@/components/admin/app-sidebar.admin';
+import { SiteHeader } from '@/components/admin/site-header.admin';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/app-sidebar';
-import { cookies, headers } from 'next/headers';
 import { auth } from '@/lib/auth';
-import { SiteHeader } from '@/components/site-header';
+import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
+import React from 'react';
 
-export default async function Layout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get('sidebar_state')?.value === 'true';
   const _headers = await headers();
   const session = await auth.api.getSession({
     headers: _headers,
   });
-  // we can also use useSession() hook to get the session.
-  // but that should only be used in a client component.
 
-  if (!session) {
+  if (!session || session.user.role !== 'ADMIN') {
     redirect('/auth/login');
   }
 

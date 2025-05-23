@@ -6,6 +6,7 @@ import { prisma } from '@/lib/prisma';
 import { hashPassword, verifyPassword } from '@/lib/argon2';
 import { getValidDomains } from '@/lib/valid-domains';
 import { normaliseName } from '@/lib/normalise-input';
+import { getUserRoles } from './user-roles';
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -45,6 +46,19 @@ export const auth = betterAuth({
         };
       }
     }),
+  },
+  user: {
+    additionalFields: {
+      role: {
+        // this will automatically add role field in the server session (not client)
+        type: getUserRoles(),
+        // this will allow not to pass this field during sign up.
+        // if we make this true(default value), then we are gonna need to pass role
+        // at @/actions/signup-email.action.ts to register.
+        // and we are also taking care by passing USER as default in the prisma schema
+        input: false,
+      },
+    },
   },
   session: {
     expiresIn: 30 * 24 * 60 * 60, // counted in seconds

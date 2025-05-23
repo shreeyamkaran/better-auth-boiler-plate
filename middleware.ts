@@ -10,7 +10,8 @@ export async function middleware(req: NextRequest) {
   const isLoggedIn = !!sessionCookie;
   const pathname = nextUrl.pathname;
 
-  const isOnProtectedRoute = pathname.startsWith('/dashboard');
+  const protectedRoutes = ['/dashboard', '/admin'];
+  const isOnProtectedRoute = protectedRoutes.some(path => pathname.startsWith(path));
   const isOnAuthRoute = pathname.startsWith('/auth');
 
   // Redirect unauthenticated users from protected routes

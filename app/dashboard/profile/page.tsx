@@ -59,6 +59,10 @@ export default async function ProfilePage() {
                     <TableCell className="w-1/3">E-mail</TableCell>
                     <TableCell>{session.user.email}</TableCell>
                   </TableRow>
+                  <TableRow>
+                    <TableCell className="w-1/3">Role</TableCell>
+                    <TableCell>{session.user.role}</TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </CardContent>

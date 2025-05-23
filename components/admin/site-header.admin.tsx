@@ -7,7 +7,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import Link from 'next/link';
-import { ShieldUser } from 'lucide-react';
+import { User } from 'lucide-react';
 
 export async function SiteHeader() {
   const _headers = await headers();
@@ -31,13 +31,13 @@ export async function SiteHeader() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button size="icon" variant="outline" asChild>
-                  <Link href="/admin/dashboard/home">
-                    <ShieldUser />
+                  <Link href="/dashboard/profile">
+                    <User />
                   </Link>
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom" align="center">
-                Admin Dashboard
+                Profile
               </TooltipContent>
             </Tooltip>
           )}
