@@ -3,7 +3,6 @@
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { UserRole } from '@/prisma/generated/prisma';
-import { error } from 'console';
 import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
 

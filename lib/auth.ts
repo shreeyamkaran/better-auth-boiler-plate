@@ -6,7 +6,8 @@ import { prisma } from '@/lib/prisma';
 import { hashPassword, verifyPassword } from '@/lib/argon2';
 import { getValidDomains } from '@/lib/valid-domains';
 import { normaliseName } from '@/lib/normalise-input';
-import { getUserRoles } from './user-roles';
+import { getUserRoles } from '@/lib/user-roles';
+import { UserRole } from '@/prisma/generated/prisma';
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -24,6 +25,7 @@ export const auth = betterAuth({
   },
   hooks: {
     before: createAuthMiddleware(async ctx => {
+      // we are checking for valid domains
       if (ctx.path == '/sign-up/email') {
         const email = String(ctx.body.email);
         const domain = email.split('@')[1];
@@ -33,7 +35,7 @@ export const auth = betterAuth({
             message: 'Invalid domain. Please use a valid email.',
           });
         }
-
+        // we are normalising the name input
         const name = normaliseName(String(ctx.body.name));
         return {
           context: {
@@ -46,6 +48,19 @@ export const auth = betterAuth({
         };
       }
     }),
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        before: async user => {
+          const adminEmails = process.env.ADMIN_EMAILS?.split(';') ?? [];
+          if (adminEmails.includes(user.email)) {
+            return { data: { ...user, role: UserRole.ADMIN } };
+          }
+          return { data: user };
+        },
+      },
+    },
   },
   user: {
     additionalFields: {
