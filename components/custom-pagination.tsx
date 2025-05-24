@@ -15,9 +15,10 @@ import { getPaginationParams } from '@/lib/pagination-params';
 export default function CustomPagination({ totalItems }: { totalItems: number }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const rawPage = searchParams.get('page');
+  const rawCurrentPage = searchParams.get('page');
   const rawPerPage = searchParams.get('per_page');
-  const { currentPage, perPage } = getPaginationParams(rawPage, rawPerPage);
+  const { currentPage, perPage } = getPaginationParams(rawCurrentPage, rawPerPage);
+
   const totalPages = Math.ceil(totalItems / perPage);
 
   const updatePage = (page: number) => {

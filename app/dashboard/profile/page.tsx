@@ -69,11 +69,6 @@ export default async function ProfilePage() {
           </Card>
         </div>
       </div>
-
-      {/*       
-      <div>
-        <pre>{JSON.stringify(session, null, 2)}</pre>
-      </div> */}
     </>
   );
 }

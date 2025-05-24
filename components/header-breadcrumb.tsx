@@ -37,13 +37,7 @@ export default function HeaderBreadcrumb() {
           return (
             <React.Fragment key={href}>
               <BreadcrumbItem>
-                {isLast ? (
-                  <div>{getBreadcrumbName(segment)}</div>
-                ) : (
-                  <BreadcrumbLink asChild>
-                    <Link href={href}>{getBreadcrumbName(segment)}</Link>
-                  </BreadcrumbLink>
-                )}
+                <span>{getBreadcrumbName(segment)}</span>
               </BreadcrumbItem>
               {!isLast && (
                 <BreadcrumbSeparator>

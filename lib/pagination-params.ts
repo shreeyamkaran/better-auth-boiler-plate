@@ -1,8 +1,8 @@
 // utils/pagination.ts
 import { DEFAULT_PAGE, DEFAULT_PER_PAGE, MAX_PER_PAGE } from '@/constants/pagination';
 
-export function getPaginationParams(rawPage?: string | null, rawPerPage?: string | null) {
-  const pageStr = rawPage && rawPage.trim() !== '' ? rawPage : undefined;
+export function getPaginationParams(rawCurrentPage?: string | null, rawPerPage?: string | null) {
+  const pageStr = rawCurrentPage && rawCurrentPage.trim() !== '' ? rawCurrentPage : undefined;
   const perPageStr = rawPerPage && rawPerPage.trim() !== '' ? rawPerPage : undefined;
 
   const parsedPage = parseInt(pageStr ?? String(DEFAULT_PAGE), 10);
