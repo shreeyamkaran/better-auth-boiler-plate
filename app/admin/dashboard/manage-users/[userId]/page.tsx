@@ -69,7 +69,7 @@ export default async function ManageUserWithId({
                 </Table>
               </CardContent>
             </Card>
-            <ManageUserControls userRole={user.role} />
+            <ManageUserControls user={user} />
           </div>
         </div>
       </div>

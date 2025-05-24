@@ -1,6 +1,6 @@
 'use client';
 
-import { UserRole } from '@/prisma/generated/prisma';
+import { User, UserRole } from '@/prisma/generated/prisma';
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Loader2, ShieldUser, Trash } from 'lucide-react';
@@ -13,48 +13,57 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
+import { prisma } from '@/lib/prisma';
+import { useRouter } from 'next/navigation';
+import { deleteUserAction } from '@/actions/delete-user.action';
+import { makeUserAdminAction } from '@/actions/user-role.action';
 
-export default function ManageUserControls({ userRole }: { userRole: UserRole }) {
+export default function ManageUserControls({ user }: { user: User }) {
   const [openDeleteUserDialog, setOpenDeleteUserDialog] = useState(false);
   const [openMakeAdminDialog, setOpenMakeAdminDialog] = useState(false);
   const [deleteUserLoading, setDeleteUserLoading] = useState(false);
   const [makeAdminLoading, setMakeAdminLoading] = useState(false);
+  const router = useRouter();
 
   const handleCancel = async () => {
     setOpenDeleteUserDialog(false);
   };
 
   const handleDeleteUser = async () => {
+    // here we are gonna need to create a server action
+    // we cannot call prisma.user.delete() here
+    // because its a client component
     setDeleteUserLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 5000));
+    const { error } = await deleteUserAction(user.id);
+    if (!error) {
       toast.success('User deleted');
-      setOpenDeleteUserDialog(false); // close only after success
-    } catch (error) {
-      console.error('Failed to delete user:', error);
-      // optionally show an error toast here
-    } finally {
-      setDeleteUserLoading(false);
+      router.push('/admin/dashboard/manage-users');
+    } else {
+      toast.error('Failed to delete user');
     }
+    setDeleteUserLoading(false);
+    setOpenDeleteUserDialog(false);
   };
 
   const handleMakeAdmin = async () => {
+    // here we are gonna need to create a server action
+    // we cannot call prisma.user.delete() here
+    // because its a client component
     setMakeAdminLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 5000));
-      toast.success('User is now an Admin');
-      setOpenMakeAdminDialog(false); // close only after success
-    } catch (error) {
-      console.error('Failed to make the user an Admin:', error);
-      // optionally show an error toast here
-    } finally {
-      setMakeAdminLoading(false);
+    const { error } = await makeUserAdminAction(user.id);
+    if (!error) {
+      toast.success('Admin access granted succesfully');
+    } else {
+      toast.error('Something went wrong. ' + error);
     }
+    setMakeAdminLoading(false);
+    setOpenMakeAdminDialog(false);
   };
 
-  if (userRole === UserRole.ADMIN) {
+  if (user.role === UserRole.ADMIN) {
     return null;
   }
+
   return (
     <div className="flex justify-end gap-2">
       <Dialog

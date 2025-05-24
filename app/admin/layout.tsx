@@ -2,6 +2,7 @@ import { AppSidebar } from '@/components/admin/app-sidebar.admin';
 import { SiteHeader } from '@/components/admin/site-header.admin';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { auth } from '@/lib/auth';
+import { UserRole } from '@/prisma/generated/prisma';
 import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import React from 'react';
@@ -14,7 +15,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     headers: _headers,
   });
 
-  if (!session || session.user.role !== 'ADMIN') {
+  if (!session || session.user.role !== UserRole.ADMIN) {
     redirect('/auth/login');
   }
 
