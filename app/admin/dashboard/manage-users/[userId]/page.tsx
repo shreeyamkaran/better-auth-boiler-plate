@@ -1,10 +1,7 @@
 import ManageUserControls from '@/components/admin/manage-user.admin';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { prisma } from '@/lib/prisma';
-import { UserRole } from '@/prisma/generated/prisma';
-import { ShieldUser, Trash } from 'lucide-react';
 import { notFound } from 'next/navigation';
 
 export default async function ManageUserWithId({
