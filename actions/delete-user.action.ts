@@ -14,11 +14,24 @@ export async function deleteUserAction(userId: string) {
   if (!session) {
     return { error: 'Unauthenticated' };
   }
-  if (session.user.role !== 'ADMIN') {
-    return { error: 'Unauthorised' };
-  }
   if (session.user.id === userId) {
     return { error: 'Method not allowed. Cannot delete yourself' };
+  }
+
+  const hasPermissionResponse = await auth.api.userHasPermission({
+    headers: _headers,
+    body: {
+      permissions: {
+        user: ['delete'],
+      },
+    },
+  });
+
+  const hasPermission =
+    hasPermissionResponse.error === null && hasPermissionResponse.success === true;
+
+  if (!hasPermission) {
+    return { error: 'Unauthorised' };
   }
 
   try {

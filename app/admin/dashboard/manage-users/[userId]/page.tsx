@@ -1,7 +1,9 @@
 import ManageUserControls from '@/components/admin/manage-user.admin';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 export default async function ManageUserWithId({
@@ -9,6 +11,7 @@ export default async function ManageUserWithId({
 }: {
   params: Promise<{ userId: string }>;
 }) {
+  const _headers = await headers();
   const userId = (await params).userId;
   if (!userId || typeof userId !== 'string') {
     notFound();
@@ -19,6 +22,19 @@ export default async function ManageUserWithId({
   if (!user) {
     notFound();
   }
+
+  const hasPermissionResponse = await auth.api.userHasPermission({
+    body: {
+      userId: userId,
+      permissions: {
+        user: ['get-deleted', 'get-role-changed'],
+      },
+    },
+  });
+
+  const hasPermission =
+    hasPermissionResponse.error === null && hasPermissionResponse.success === true;
+
   return (
     <>
       <div className="mb-8 text-2xl sm:text-4xl md:text-5xl lg:text-6xl">{user.name}</div>
@@ -69,7 +85,7 @@ export default async function ManageUserWithId({
                 </Table>
               </CardContent>
             </Card>
-            <ManageUserControls user={user} />
+            {hasPermission && <ManageUserControls user={user} />}
           </div>
         </div>
       </div>

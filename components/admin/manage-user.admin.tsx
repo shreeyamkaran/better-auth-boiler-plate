@@ -1,6 +1,6 @@
 'use client';
 
-import { User, UserRole } from '@/prisma/generated/prisma';
+import { User } from '@/prisma/generated/prisma';
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Loader2, ShieldUser, Trash } from 'lucide-react';
@@ -13,7 +13,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { prisma } from '@/lib/prisma';
 import { useRouter } from 'next/navigation';
 import { deleteUserAction } from '@/actions/delete-user.action';
 import { makeUserAdminAction } from '@/actions/user-role.action';
@@ -59,10 +58,6 @@ export default function ManageUserControls({ user }: { user: User }) {
     setMakeAdminLoading(false);
     setOpenMakeAdminDialog(false);
   };
-
-  if (user.role === UserRole.ADMIN) {
-    return null;
-  }
 
   return (
     <div className="flex justify-end gap-2">

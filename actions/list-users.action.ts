@@ -32,7 +32,7 @@ export async function listUsersAction({
   // checking permissions using admin plugin
   // this will also, indirectly, check the current session
   // so no need to manually check that
-  const hasPermission = await auth.api.userHasPermission({
+  const hasPermissionResponse = await auth.api.userHasPermission({
     headers: _headers, // pass headers to check permissions of the current logged-in user
     body: {
       // we can also pass userId here to check permissions of that particular user
@@ -45,6 +45,9 @@ export async function listUsersAction({
       },
     },
   });
+
+  const hasPermission =
+    hasPermissionResponse.error === null && hasPermissionResponse.success === true;
 
   if (!hasPermission) {
     return { error: 'Unauthorised', data: null };
