@@ -12,14 +12,41 @@ export async function listUsersAction({
   perPage: number;
 }) {
   const _headers = await headers();
+  // checking session manually
+  /**
   const session = await auth.api.getSession({
     headers: _headers,
   });
-
   if (!session) {
     return { error: 'Unauthenticated', data: null };
   }
+  */
+
+  // checking permissions manually
+  /**
   if (session.user.role !== 'ADMIN') {
+    return { error: 'Unauthorised', data: null };
+  }
+  */
+
+  // checking permissions using admin plugin
+  // this will also, indirectly, check the current session
+  // so no need to manually check that
+  const hasPermission = await auth.api.userHasPermission({
+    headers: _headers, // pass headers to check permissions of the current logged-in user
+    body: {
+      // we can also pass userId here to check permissions of that particular user
+      permissions: {
+        // checking if the current logged in user has the permission
+        // to list down the users in the db
+        // we can pass multiple statements inside the array
+        // the statements are defined at @/lib/permissions.ts
+        user: ['list'], // user is the name of the table in the db
+      },
+    },
+  });
+
+  if (!hasPermission) {
     return { error: 'Unauthorised', data: null };
   }
 
@@ -40,14 +67,17 @@ export async function listUsersAction({
 
 export async function totalNumberOfUsersAction() {
   const _headers = await headers();
-  const session = await auth.api.getSession({
+
+  const hasPermission = await auth.api.userHasPermission({
     headers: _headers,
+    body: {
+      permissions: {
+        user: ['list'],
+      },
+    },
   });
 
-  if (!session) {
-    return { error: 'Unauthenticated', data: null };
-  }
-  if (session.user.role !== 'ADMIN') {
+  if (!hasPermission) {
     return { error: 'Unauthorised', data: null };
   }
 
