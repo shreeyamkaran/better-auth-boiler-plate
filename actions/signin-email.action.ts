@@ -54,7 +54,6 @@ export async function signinEmailAction(formData: SigninData) {
     if (response.ok) {
       return { error: null };
     } else {
-      console.log(response);
       return { error: response.statusText };
     }
   } catch (e) {

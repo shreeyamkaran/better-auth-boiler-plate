@@ -10,6 +10,7 @@ import { normaliseName } from '@/lib/normalise-input';
 import { getUserRoles } from '@/lib/user-roles';
 import { UserRole } from '@/prisma/generated/prisma';
 import { accessControl as ac, roles } from '@/lib/permissions';
+import { SendEmailAction } from '@/actions/send-email.action';
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -25,6 +26,24 @@ export const auth = betterAuth({
       verify: verifyPassword,
     },
     requireEmailVerification: true,
+  },
+  emailVerification: {
+    sendOnSignUp: true,
+    expiresIn: 60 * 60, // measured in seconds
+    autoSignInAfterVerification: true,
+    sendVerificationEmail: async ({ user, url }) => {
+      const link = new URL(url);
+      link.searchParams.set('callbackURL', '/auth/verify');
+      await SendEmailAction({
+        to: user.email,
+        subject: 'Better Auth - Email Verification',
+        body: {
+          header: 'Email Verification',
+          description: 'Click on the link below to verify this email',
+          link: String(link),
+        },
+      });
+    },
   },
   socialProviders: {
     google: {
