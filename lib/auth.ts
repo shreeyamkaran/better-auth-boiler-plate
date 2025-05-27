@@ -24,6 +24,7 @@ export const auth = betterAuth({
       hash: hashPassword,
       verify: verifyPassword,
     },
+    requireEmailVerification: true,
   },
   socialProviders: {
     google: {
