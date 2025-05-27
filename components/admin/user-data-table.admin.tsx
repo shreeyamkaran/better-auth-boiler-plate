@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { User as UserIcon } from 'lucide-react';
+import { UserCog } from 'lucide-react';
 import type { User } from '@/prisma/generated/prisma';
 import Link from 'next/link';
 
@@ -43,7 +43,7 @@ export default function UserDataTable({ users }: { users: User[] }) {
                 <TableCell className="truncate max-w-[200px] overflow-hidden whitespace-nowrap">
                   <Button asChild>
                     <Link href={`/admin/dashboard/manage-users/${user.id}`}>
-                      <UserIcon />
+                      <UserCog />
                     </Link>
                   </Button>
                 </TableCell>

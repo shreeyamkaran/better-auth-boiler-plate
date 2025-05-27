@@ -92,6 +92,13 @@ export const auth = betterAuth({
   session: {
     expiresIn: 30 * 24 * 60 * 60, // counted in seconds
   },
+  account: {
+    accountLinking: {
+      // default true. a user can have more than one account under 1 email.
+      // we don't want that and that's why we made this flag false
+      enabled: false,
+    },
+  },
   advanced: {
     database: {
       generateId: false, // default true. if false, we need to add @default in the schema
