@@ -17,14 +17,12 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { getSignUpSchema, TSignUpSchema } from '@/lib/signup-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { signupEmailAction } from '@/actions/signup-email.action';
 import ContinueWithGoogleButton from '@/components/google-button';
 import ContinueWithGithubButton from '@/components/github-button';
 
 export function RegisterForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
-  const router = useRouter();
   const signupSchema = getSignUpSchema();
   const form = useForm<TSignUpSchema>({
     resolver: zodResolver(signupSchema),
@@ -64,8 +62,7 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
     // server-side way of registering
     const { error } = await signupEmailAction(formData);
     if (error == null) {
-      toast.success('Registration succesful');
-      router.push('/auth/login');
+      toast.success('A verification link has been sent to your email');
     } else {
       toast.error(error);
     }

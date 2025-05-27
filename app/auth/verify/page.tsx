@@ -15,11 +15,16 @@ export default async function PostEmailVerificationPage({
   let message = 'Something went wrong.';
   switch (error) {
     case 'invalid_token':
-      message = 'The link is either invalid or has been expired. Please generate a new one';
+      message = 'The verification link provided is invalid. Kindly request a new link.';
       break;
     case 'token_expired':
-      message = 'The link is either invalid or has been expired. Please generate a new one';
+      message = 'This verification link has expired. Please generate a new one to proceed.';
       break;
+    case 'email_not_verified':
+      message = 'Your email address remains unverified. Kindly request a new verification link.';
+      break;
+    default:
+      message = 'An unexpected error has occurred. Please try again or request a new link.';
   }
 
   return (

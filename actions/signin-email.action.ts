@@ -1,7 +1,9 @@
 'use server';
 
-import { auth } from '@/lib/auth';
+import { auth, ErrorCode } from '@/lib/auth';
+import { APIError } from 'better-auth/api';
 import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 type SigninData = {
   email: string;
@@ -11,13 +13,12 @@ type SigninData = {
 export async function signinEmailAction(formData: SigninData) {
   const _headers = await headers();
   try {
-    const response = await auth.api.signInEmail({
+    await auth.api.signInEmail({
+      headers: _headers,
       body: {
         email: formData.email,
         password: formData.password,
       },
-      headers: _headers,
-      asResponse: true,
     });
 
     // the above server action will not set up the cookie
@@ -51,14 +52,16 @@ export async function signinEmailAction(formData: SigninData) {
     }
     */
 
-    if (response.ok) {
-      return { error: null };
-    } else {
-      return { error: response.statusText };
-    }
+    return { error: null };
   } catch (e) {
-    if (e instanceof Error) {
-      return { error: e.message };
+    if (e instanceof APIError) {
+      const errCode = (e.body?.code as ErrorCode) || 'UNKNOWN';
+      switch (errCode) {
+        case 'EMAIL_NOT_VERIFIED':
+          redirect('/auth/verify?error=email_not_verified');
+        default:
+          return { error: e.message };
+      }
     } else {
       return { error: 'Something went wrong.' };
     }
