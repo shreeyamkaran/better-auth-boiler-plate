@@ -1,6 +1,7 @@
-import { Button } from '@/components/ui/button';
+import GenerateNewVerificationLinkForm from '@/components/generate-new-verification-link-form';
 import { GalleryVerticalEnd } from 'lucide-react';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
 export default async function PostEmailVerificationPage({
   searchParams,
@@ -8,6 +9,9 @@ export default async function PostEmailVerificationPage({
   searchParams: Promise<{ error: string }>;
 }) {
   const { error } = await searchParams;
+  if (!error) {
+    notFound();
+  }
   let message = 'Something went wrong.';
   switch (error) {
     case 'invalid_token':
@@ -33,9 +37,7 @@ export default async function PostEmailVerificationPage({
               <h1 className="text-xl font-bold">Error</h1>
               <div className="text-center text-sm">{message}</div>
             </div>
-            <Button asChild>
-              <Link href="/auth/login">Back to login page</Link>
-            </Button>
+            <GenerateNewVerificationLinkForm />
           </div>
         </div>
       </div>
