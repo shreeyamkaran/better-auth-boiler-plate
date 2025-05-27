@@ -10,7 +10,7 @@ const styles = {
   footer: 'font-size: 12px; color: #999; margin-top: 20px;',
 };
 
-export async function SendEmailAction({
+export async function sendEmailAction({
   to,
   subject,
   body,

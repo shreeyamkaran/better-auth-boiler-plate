@@ -10,7 +10,7 @@ import { normaliseName } from '@/lib/normalise-input';
 import { getUserRoles } from '@/lib/user-roles';
 import { UserRole } from '@/prisma/generated/prisma';
 import { accessControl as ac, roles } from '@/lib/permissions';
-import { SendEmailAction } from '@/actions/send-email.action';
+import { sendEmailAction } from '@/actions/send-email.action';
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -26,6 +26,18 @@ export const auth = betterAuth({
       verify: verifyPassword,
     },
     requireEmailVerification: true,
+    sendResetPassword: async ({ user, url }) => {
+      await sendEmailAction({
+        to: user.email,
+        subject: 'Better Auth - Password Reset',
+        body: {
+          header: 'Password Reset',
+          description: 'Click on the link below to reset your password',
+          link: url,
+        },
+      });
+    },
+    resetPasswordTokenExpiresIn: 60 * 60,
   },
   emailVerification: {
     sendOnSignUp: true,
@@ -34,7 +46,7 @@ export const auth = betterAuth({
     sendVerificationEmail: async ({ user, url }) => {
       const link = new URL(url);
       link.searchParams.set('callbackURL', '/auth/verify');
-      await SendEmailAction({
+      await sendEmailAction({
         to: user.email,
         subject: 'Better Auth - Email Verification',
         body: {

@@ -21,7 +21,8 @@ export default async function PostEmailVerificationPage({
       message = 'This verification link has expired. Please generate a new one to proceed.';
       break;
     case 'email_not_verified':
-      message = 'Your email address remains unverified. Kindly request a new verification link.';
+      message =
+        'We have sent you a verification link. Please check your email or request for a new one.';
       break;
     default:
       message = 'An unexpected error has occurred. Please try again or request a new link.';
