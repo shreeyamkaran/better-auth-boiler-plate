@@ -109,7 +109,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                   <FormLabel className="flex justify-between">
                     <div>Password</div>
                     <div className="text-muted-foreground">
-                      <Link href="/auth/forgot-password">Forgot password?</Link>
+                      <Link href="/auth/reset-password">Forgot password?</Link>
                     </div>
                   </FormLabel>
                   <FormControl>
